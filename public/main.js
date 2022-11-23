@@ -71,3 +71,7 @@ function addProducto() {
 
     return false;
 }
+
+//Monstrar el nombre del Usuario 
+const plantillaDelUsuario = Handlebars.compile(NombreUsuario.hbs, {usuario});
+document.getElementById("nombreUsuario").innerHTML = plantillaDelUsuario;

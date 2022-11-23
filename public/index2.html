@@ -9,11 +9,30 @@
 <body>
     <div style="display: flex; gap: 10px;">
         <div>
-            <h1>Agregar producto</h1>
+            <h1>Bienvenido/a</h1>
 
             <script src="/socket.io/socket.io.js"></script>     <!-- Este script está dentro de la carpeta socket.io que se genera al instalar socket-->
             <script src="./main.js"></script>                   <!-- Este es nuestro script con la logica del cliente-->
             <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>   <!-- Handlebars desde un CDN-->
+
+
+        </div>
+
+        <div id="nombreUsuario">                                       <!-- Aquí en este div, se inyecta la plantillaProductos de handlebars-->
+            
+                
+        </div>
+
+        </form>
+        <form action="/logout" method="get">
+        <input type="submit" value="Logout">
+        </form>
+        </div>
+
+        <div>
+            <h1>Agregar producto</h1>
+
+           <!--justo aqui estaba los de los scripts-->
 
             <!-- <form action="/api/productos" method="post">                        -Formulario para añadir productos-->
             <form onsubmit="return addProducto(this)">

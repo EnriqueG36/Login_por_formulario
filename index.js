@@ -46,16 +46,19 @@ app.use(session({
     store: MongoStore.create({
        mongoUrl: 'mongodb+srv://enrique:dbmongo@clustercoder.ijswitn.mongodb.net/DesafioLogin?retryWrites=true&w=majority',
     }),
+    cookie: {
+        maxAge: 600000                              //Duracion de la session en mongo atlas 10 min
+    }
 }))
 
-
+// Rutas desafio Login por formulario ------------------------------------------------------------------------------------------------------
 
 //Routes
 app.use('/api', apiRoutes);                 //Ruta a routers.js con prefijo /api
 
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
     res.send("pantalla de inicio");
-});
+});*/
 
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
@@ -67,10 +70,31 @@ app.post('/login', (req, res) => {
         console.log("Session error => ", err);
         return res.redirect('/error');
       }
-      res.redirect('/profile');
+        return res.redirect('/index2');
+      
     })
   });
 
+  app.get('/index2', (req, res) => {
+    res.status(200).sendFile(__dirname+'/public/index2.html');
+  });
+
+
+app.get('/error', (req, res) => {
+    res.send("Pantalla de error, porque hubo un error");
+});
+
+app.get('/logout', (req,res) => {
+   req.session.destroy (err => {
+        if (!err) {
+            res.status(200).sendFile(__dirname+'/public/logout.html');
+            setInterval(res.redirect('/'), 2000);
+        }
+        else{
+            res.send("Ocurrio un error");
+        }
+   })
+});
 
 
 
@@ -86,6 +110,9 @@ app.post('/login', (req, res) => {
 
 
 
+
+
+//socket y demás-------------------------------------------------------------------------------------------------------------------
 
 
 //clases importadas
