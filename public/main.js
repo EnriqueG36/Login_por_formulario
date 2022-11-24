@@ -73,5 +73,10 @@ function addProducto() {
 }
 
 //Monstrar el nombre del Usuario 
-const plantillaDelUsuario = Handlebars.compile(NombreUsuario.hbs, {usuario});
-document.getElementById("nombreUsuario").innerHTML = plantillaDelUsuario;
+function compilarPlantillaUsuario(usuario) {
+const plantillaDelUsuario = Handlebars.compile(plantillaNombreUsuario);
+const nombreUsuario = plantillaDelUsuario({usuario});
+document.getElementById("nombreUsuario").innerHTML = nombreUsuario;
+}
+
+compilarPlantillaUsuario();

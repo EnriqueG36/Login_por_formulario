@@ -12,8 +12,6 @@ const fs = require("fs");                           //Importamos el modulo file 
 const session = require('express-session');         //Importamos express-session
 const  MongoStore = require('connect-mongo');       //Requerimos el modulo connect-mongo
 
-const users = [...require('./data/users.json')];
-
 //A continuacion la configuración básica de un servidor http con socket en conjunto
 const PORT = process.env.PORT || 8080;              //Configuramos el puerto por la variable de entorno O por el 8080
 const app = express();                              //Instanciamos el modulo express
@@ -23,7 +21,6 @@ const io = new SocketServer(httpServer);            //intanciamos el servidor so
 //Objeto de configuracion Bases de datos
 const dbConfig = require('./db/config.js')         //Importamos nuestro objeto de configuracion Knex
                            
-
 //Configuración del motor de plantilla para el uso de HANDLEBARS
 app.engine('hbs', engine({
     extname: 'hbs',
@@ -32,6 +29,7 @@ app.engine('hbs', engine({
     partialsDir: path.resolve(__dirname, './views/partials')
 }));
 
+//Setteando la carpeta de plantillas y extension de las mismas
 app.set('views','./views');                 //Indicamos a express la ruta de nuestra plantilla
 app.set('view engine', 'hbs');              //Indicamos a express el motor de plantillas a usar
 
@@ -60,24 +58,27 @@ app.use('/api', apiRoutes);                 //Ruta a routers.js con prefijo /api
     res.send("pantalla de inicio");
 });*/
 
+//EN esta ruta se setteará la session
 app.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    const user = users.find(user => user.email === email);
-    if (!user) return res.redirect('/error');
-    req.session.user = user;
-    req.session.save((err) => {
+    const { user } = req.body;                  //tomamos el nombre del usuario del body de la peticion    
+    req.session.user = user;                    //Setteamos el nombre del usuario de la session
+    req.session.save((err) => {                 //Guardamos la session
       if (err) {
         console.log("Session error => ", err);
         return res.redirect('/error');
       }
-        return res.redirect('/index2');
-      
+        return res.redirect('/index2');      
     })
   });
 
-  app.get('/index2', (req, res) => {
+//Aquí debe de ir la logica para ver si la session está activa
+app.get('/index2', (req, res) => {
+    const user = req.session.user;                                  //Requerimos el nombre del usuario de la session
+    if (user)                                                       //Si el usuario se encuntra a la session, enviaremos el archivo index2.html
     res.status(200).sendFile(__dirname+'/public/index2.html');
-  });
+    else                                                            //De otra forma se redirige a la pantalla de loggeo
+    return res.redirect('/');
+});
 
 
 app.get('/error', (req, res) => {
@@ -85,32 +86,20 @@ app.get('/error', (req, res) => {
 });
 
 app.get('/logout', (req,res) => {
-   req.session.destroy (err => {
+    const user = req.session.user;    
+    console.log(user);
+    res.status(200).sendFile(__dirname+'/public/logout.html');
+    req.session.destroy (err => {
         if (!err) {
-            res.status(200).sendFile(__dirname+'/public/logout.html');
-            setInterval(res.redirect('/'), 2000);
+            //res.status(200).sendFile(__dirname+'/public/logout.html');
+            //setInterval(res.redirect('/'), 2000);
+            return res.redirect('/');
         }
         else{
             res.send("Ocurrio un error");
         }
    })
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //socket y demás-------------------------------------------------------------------------------------------------------------------
 
