@@ -73,10 +73,13 @@ function addProducto() {
 }
 
 //Monstrar el nombre del Usuario 
-function compilarPlantillaUsuario(usuario) {
-const plantillaDelUsuario = Handlebars.compile(plantillaNombreUsuario);
+async function compilarPlantillaUsuario(usuario) {
+
+const fetchHBS = await fetch("plantillaNombreUsuario.hbs");
+const textHBS = await fetchHBS.text();
+const plantillaDelUsuario = Handlebars.compile(textHBS);
 const nombreUsuario = plantillaDelUsuario({usuario});
 document.getElementById("nombreUsuario").innerHTML = nombreUsuario;
 }
 
-compilarPlantillaUsuario();
+socket.on ('mostrarNombreSession', compilarPlantillaUsuario);

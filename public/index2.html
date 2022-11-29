@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafio 6</title>
+    <title>Desafio Login con Session</title>
 </head>
 <body>
     <div style="display: flex; gap: 10px;">
         <div>
-            <h1>Bienvenido/a</h1>
+            
 
             <script src="/socket.io/socket.io.js"></script>     <!-- Este script está dentro de la carpeta socket.io que se genera al instalar socket-->
             <script src="./main.js"></script>                   <!-- Este es nuestro script con la logica del cliente-->
@@ -19,8 +19,7 @@
         </div>
 
         <div id="nombreUsuario">                                       <!-- Aquí en este div, se inyecta la plantillaProductos de handlebars-->
-            
-                
+                       
         </div>
 
         </form>
@@ -63,7 +62,9 @@
                 <input type="submit" id="botonEnviar" value="Enviar">
             </form>
         </div>
-        <div id="mensajeria"></div>                                         <!--Espacio donde se muestran los mensajes del chat-->
-    </div>
+        <div id="mensajeria">                                               <!--Espacio donde se muestran los mensajes del chat-->
+        </div>
+
+        </div>                                         
 </body>
 </html>

@@ -52,11 +52,13 @@ app.use(session({
 // Rutas desafio Login por formulario ------------------------------------------------------------------------------------------------------
 
 //Routes
-app.use('/api', apiRoutes);                 //Ruta a routers.js con prefijo /api
+app.use('/api', apiRoutes);                      //Ruta a routers.js con prefijo /api
 
 /*app.get('/', (req, res) => {
     res.send("pantalla de inicio");
 });*/
+
+let nombreDelUser;
 
 //EN esta ruta se setteará la session
 app.post('/login', (req, res) => {
@@ -74,6 +76,7 @@ app.post('/login', (req, res) => {
 //Aquí debe de ir la logica para ver si la session está activa
 app.get('/index2', (req, res) => {
     const user = req.session.user;                                  //Requerimos el nombre del usuario de la session
+    nombreDelUser = user;
     if (user)                                                       //Si el usuario se encuntra a la session, enviaremos el archivo index2.html
     res.status(200).sendFile(__dirname+'/public/index2.html');
     else                                                            //De otra forma se redirige a la pantalla de loggeo
@@ -86,19 +89,21 @@ app.get('/error', (req, res) => {
 });
 
 app.get('/logout', (req,res) => {
+
     const user = req.session.user;    
     console.log(user);
-    res.status(200).sendFile(__dirname+'/public/logout.html');
+    res.sendFile(__dirname+'/public/logout.html');
     req.session.destroy (err => {
         if (!err) {
-            //res.status(200).sendFile(__dirname+'/public/logout.html');
+            
             //setInterval(res.redirect('/'), 2000);
             return res.redirect('/');
         }
         else{
             res.send("Ocurrio un error");
-        }
+        }     
    })
+   
 });
 
 //socket y demás-------------------------------------------------------------------------------------------------------------------
@@ -130,7 +135,11 @@ io.on('connection', async (socket)=> {
     //socket.emit('messages', messages);                                          
     socket.emit('messages', await apiChat.getAll());                                             //Emite un evento llamado messages, manda el resultado de la clase apiChat.getAll para obtener todo el historial de chat
     socket.emit('productos', await apiProductos.getAll());                                       //Emite un evento llamado productos, que manda como parametro la lista de productos
+   
     
+    socket.emit('mostrarNombreSession', nombreDelUser);                                         //emite el nombre de suario de la session
+
+
     //Escucha por los mensajes emitido por el lado del cliente con el metodo on
     socket.on('new-message',data => {
 
