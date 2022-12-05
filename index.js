@@ -24,7 +24,7 @@ const dbConfig = require('./db/config.js')         //Importamos nuestro objeto d
 //Configuración del motor de plantilla para el uso de HANDLEBARS
 app.engine('hbs', engine({
     extname: 'hbs',
-    defaultLayout: 'main.hbs',
+    
     layoutsDir: path.resolve(__dirname, './views/layouts'),
     partialsDir: path.resolve(__dirname, './views/partials')
 }));
@@ -92,18 +92,20 @@ app.get('/logout', (req,res) => {
 
     const user = req.session.user;    
     console.log(user);
-    res.sendFile(__dirname+'/public/logout.html');
+
+    if (user){                                                               //Validamos si hay una session de usuario activa           
+    
     req.session.destroy (err => {
         if (!err) {
-            
-            //setInterval(res.redirect('/'), 2000);
-            return res.redirect('/');
+            res.render('index', {layout: 'logout', user});                  //Respondemos la peticion con la plantilla 
+            //setInterval(res.redirect('/'), 2000); 
         }
         else{
             res.send("Ocurrio un error");
         }     
-   })
-   
+   })}
+    else                                                                    //De otra forma se redirige a la pantalla de loggeo
+    return res.redirect('/');
 });
 
 //socket y demás-------------------------------------------------------------------------------------------------------------------
